@@ -8,13 +8,7 @@ public class Cube : BaseObject
     private float _minSeconds = 2.0f;
     private float _maxSeconds = 5.0f;
 
-    //private Renderer _renderer;
     private Coroutine _coroutine;
-
-    private void Awake()
-    {
-        //_renderer = GetComponent<Renderer>();
-    }
 
     private void OnCollisionEnter(Collision collision)
     {

@@ -6,16 +6,6 @@ public static class Pool<T> where T : MonoBehaviour, new()
     public static int _poolMaxSize;
 
     private static readonly List<T> _poolActive = new List<T>();
-    //private static List<T> _poolInActive;
-
-    //public Pool(int capacity, int maxSize)
-    //{
-    //    _poolActive = new List<T>();
-    //    _poolInActive = new List<T>();
-
-    //    _poolCapacity = capacity;
-    //    _poolMaxSize = maxSize;
-    //}
 
     private static T OnCreate(T prefab, Transform parent = null)
     {
@@ -24,7 +14,7 @@ public static class Pool<T> where T : MonoBehaviour, new()
         return newObject;
     }
 
-    public static T OnGet(T prefab, Transform parent = null/*, Transform nextPosition = null*/)
+    public static T OnGet(T prefab, Transform parent = null)
     {
         T result = null;
 
