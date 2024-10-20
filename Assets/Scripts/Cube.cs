@@ -1,35 +1,25 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-public class Cube : BaseObject
+public class Cube : MonoBehaviour
 {
-    [SerializeField] private Sphere _bombPrefab;
+    public float MinSeconds { get; private set; }
+    public float MaxSeconds { get; private set; }
 
-    private float _minSeconds = 2.0f;
-    private float _maxSeconds = 5.0f;
+    public event Action<Cube> SpawningBomb;
 
-    private Coroutine _coroutine;
+    private void Awake()
+    {
+        MinSeconds = 2.0f;
+        MaxSeconds = 5.0f;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider is MeshCollider)
         {
-            _coroutine = StartCoroutine(SpawnBomb());
+            SpawningBomb?.Invoke(this);
         }
-    }
-
-    private IEnumerator SpawnBomb()
-    {
-        yield return new WaitForSeconds(Random.Range(_minSeconds, _maxSeconds));
-
-        Deactivate();
-
-        var bomb = Pool<Sphere>.OnGet(_bombPrefab);
-
-        if (bomb != null)
-            bomb.SetPosition(transform.position);
-
-        if (_coroutine != null)
-            StopCoroutine(_coroutine);
     }
 }

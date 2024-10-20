@@ -1,9 +1,10 @@
 
+using System;
 using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class Sphere : BaseObject
+public class Sphere : MonoBehaviour
 {
     [SerializeField] private float _explosionForce;
     [SerializeField] private float _explosionRadius;
@@ -12,8 +13,9 @@ public class Sphere : BaseObject
     private float _minTransparency = 0.1f;
 
     private Coroutine _coroutine;
-
     private MeshRenderer _renderer;
+
+    public event Action<Sphere> Releasing;
 
     private void Awake()
     {
@@ -26,14 +28,8 @@ public class Sphere : BaseObject
         _coroutine = StartCoroutine(ChangeTransparency());
     }
 
-    private void OnDisable()
-    {
-        if (_coroutine != null)
-            StopCoroutine(_coroutine);
-    }
-
     public void SetPosition(Vector3 position) =>
-        this.transform.position = position;
+        transform.position = position;
 
     private void Explode()
     {
@@ -45,7 +41,7 @@ public class Sphere : BaseObject
                 rigidbody.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
         }
 
-        Pool<Sphere>.OnRelease(this);
+        Releasing?.Invoke(this);
     }
 
     private IEnumerator ChangeTransparency()

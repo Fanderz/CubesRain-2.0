@@ -1,26 +1,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class Pool<T> where T : MonoBehaviour, new()
+public class Pool<T> where T : MonoBehaviour, new()
 {
-    public static int _poolMaxSize;
+    private int _poolMaxSize;
 
-    private static readonly List<T> _poolActive = new List<T>();
+    private List<T> _objects;
 
-    private static T OnCreate(T prefab, Transform parent = null)
+    public Pool(int maxSize)
     {
-        var newObject = Object.Instantiate(prefab, parent);
-
-        return newObject;
+        _objects = new List<T>();
+        _poolMaxSize = maxSize;
     }
 
-    public static T OnGet(T prefab, Transform parent = null)
+    private T Create(T prefab, Transform parent = null)
+    {
+        return Object.Instantiate(prefab, parent);
+    }
+
+    public T Get(T prefab, Transform parent = null)
     {
         T result = null;
 
-        if (_poolActive.FindAll(obj => obj.gameObject.activeSelf == false).Count > 0)
+        if (_objects.FindAll(obj => obj.gameObject.activeSelf == false).Count > 0)
         {
-            result = _poolActive.Find(obj => obj.gameObject.activeSelf == false);
+            result = _objects.Find(obj => obj.gameObject.activeSelf == false);
 
             if (result != null)
             {
@@ -29,27 +33,34 @@ public static class Pool<T> where T : MonoBehaviour, new()
         }
         else
         {
-            if (_poolActive.Count < _poolMaxSize)
+            if (_objects.Count < _poolMaxSize)
             {
-                result = OnCreate(prefab);
-                _poolActive.Add(result);
+                result = Create(prefab, parent);
+                _objects.Add(result);
             }
         }
 
         return result;
     }
 
-    public static void OnRelease(T obj)
+    public void Release(T obj)
     {
-        var finded = _poolActive.Find(finded => finded.Equals(obj));
-        finded.gameObject.SetActive(false);
-    }
-
-    public static void OnDestroy(T obj)
-    {
-        var finded = _poolActive.Find(finded => finded.Equals(obj));
+        var finded = _objects.Find(finded => finded.Equals(obj));
 
         if (finded != null)
-            _poolActive.Remove(finded);
+            finded.gameObject.SetActive(false);
+    }
+
+    public void Destroy(T obj)
+    {
+        var finded = _objects.Find(finded => finded.Equals(obj));
+
+        if (finded != null)
+        {
+            _objects.Remove(finded);
+
+            Object.Destroy(finded.gameObject);
+        }
+
     }
 }
