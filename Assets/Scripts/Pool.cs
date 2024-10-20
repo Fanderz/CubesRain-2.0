@@ -13,10 +13,9 @@ public class Pool<T> where T : MonoBehaviour, new()
         _poolMaxSize = maxSize;
     }
 
-    private T Create(T prefab, Transform parent = null)
-    {
-        return Object.Instantiate(prefab, parent);
-    }
+    public int Count => _objects.Count;
+
+    public int ActiveCount => _objects.FindAll(finded => finded.gameObject.activeSelf == true).Count;
 
     public T Get(T prefab, Transform parent = null)
     {
@@ -62,5 +61,10 @@ public class Pool<T> where T : MonoBehaviour, new()
             Object.Destroy(finded.gameObject);
         }
 
+    }
+
+    private T Create(T prefab, Transform parent = null)
+    {
+        return Object.Instantiate(prefab, parent);
     }
 }
