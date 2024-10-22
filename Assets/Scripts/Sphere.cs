@@ -32,6 +32,9 @@ public class Sphere : MonoBehaviour
 
     private void Explode()
     {
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+
         Collider[] colliders = Physics.OverlapSphere(transform.position, _explosionRadius);
 
         foreach (Collider collider in colliders)

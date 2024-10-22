@@ -3,22 +3,42 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    public float MinSeconds { get; private set; }
-    public float MaxSeconds { get; private set; }
+    private bool _hitted;
+    private Rigidbody _rigidbody;
 
     public event Action<Cube> SpawningBomb;
+    public event Action<Cube> Releasing;
+
+    public float MinSeconds { get; private set; }
+    public float MaxSeconds { get; private set; }
 
     private void Awake()
     {
         MinSeconds = 2.0f;
         MaxSeconds = 5.0f;
+
+        _rigidbody = GetComponent<Rigidbody>();
+        _hitted = false;
+    }
+
+    private void OnEnable()
+    {
+        _hitted = false;
+        _rigidbody.velocity = Vector3.zero;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider is MeshCollider)
+        if (collision.collider is MeshCollider && _hitted == false)
         {
-            SpawningBomb?.Invoke(this);
+            _hitted = true;
+            Invoke("OnRelease", UnityEngine.Random.Range(MinSeconds, MaxSeconds));
         }
+    }
+
+    private void OnRelease()
+    {
+        Releasing?.Invoke(this);
+        SpawningBomb?.Invoke(this);
     }
 }

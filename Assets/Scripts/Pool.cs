@@ -1,23 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pool<T> where T : MonoBehaviour, new()
+public class Pool<T> where T : MonoBehaviour
 {
     private int _poolMaxSize;
-
     private List<T> _objects;
+    private T _prefab;
+    private Transform _parent;
 
-    public Pool(int maxSize)
+    public Pool(int maxSize, T prefab, Transform parent)
     {
         _objects = new List<T>();
         _poolMaxSize = maxSize;
+        _prefab = prefab;
+        _parent = parent;
     }
 
     public int Count => _objects.Count;
 
     public int ActiveCount => _objects.FindAll(finded => finded.gameObject.activeSelf == true).Count;
 
-    public T Get(T prefab, Transform parent = null)
+    public T Get()
     {
         T result = null;
 
@@ -34,7 +37,7 @@ public class Pool<T> where T : MonoBehaviour, new()
         {
             if (_objects.Count < _poolMaxSize)
             {
-                result = Create(prefab, parent);
+                result = Create(_prefab, _parent);
                 _objects.Add(result);
             }
         }
@@ -48,19 +51,6 @@ public class Pool<T> where T : MonoBehaviour, new()
 
         if (finded != null)
             finded.gameObject.SetActive(false);
-    }
-
-    public void Destroy(T obj)
-    {
-        var finded = _objects.Find(finded => finded.Equals(obj));
-
-        if (finded != null)
-        {
-            _objects.Remove(finded);
-
-            Object.Destroy(finded.gameObject);
-        }
-
     }
 
     private T Create(T prefab, Transform parent = null)
