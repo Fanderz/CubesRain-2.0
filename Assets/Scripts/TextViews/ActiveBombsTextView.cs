@@ -1,7 +1,7 @@
-public class ActiveBombsTextView : BaseTextView<Sphere>
+public class ActiveBombsTextView : BaseTextView<Bomb>
 {
     protected override void Start()
     {
-        spawner.ChangedActiveCounter += ChangeView;
+        Spawner.ChangedActiveCounter += ChangeView;
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 public class Pool<T> where T : MonoBehaviour
 {
     private int _poolMaxSize;
+
     private List<T> _objects;
     private T _prefab;
     private Transform _parent;

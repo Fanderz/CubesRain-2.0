@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class BaseSpawner<T> : MonoBehaviour
 {
-    [SerializeField] protected T prefab;
-    [SerializeField] protected Transform parent;
-    [SerializeField] protected int poolMaxSize;
+    [SerializeField] protected T Prefab;
+    [SerializeField] protected Transform Parent;
+    [SerializeField] protected int PoolMaxSize;
 
-    protected int spawnedObjectsCount;
+    protected int SpawnedObjectsCount;
 
     public virtual event Action<int> ChangedSpawnedCounter;
     public virtual event Action<int> ChangedCreatedCounter;
@@ -16,6 +16,6 @@ public class BaseSpawner<T> : MonoBehaviour
 
     private void Awake()
     {
-        spawnedObjectsCount = 0;
+        SpawnedObjectsCount = 0;
     }
 }

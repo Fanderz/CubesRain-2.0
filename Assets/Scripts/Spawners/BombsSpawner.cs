@@ -1,8 +1,8 @@
 using System;
 
-public class BombsSpawner : BaseSpawner<Sphere>
+public class BombsSpawner : BaseSpawner<Bomb>
 {
-    private Pool<Sphere> _pool;
+    private Pool<Bomb> _pool;
 
     public event Action<Cube> ReleasingCube;
 
@@ -12,7 +12,7 @@ public class BombsSpawner : BaseSpawner<Sphere>
 
     private void Awake()
     {
-        _pool = new Pool<Sphere>(poolMaxSize, prefab, transform);
+        _pool = new Pool<Bomb>(PoolMaxSize, Prefab, transform);
     }
 
     private void FixedUpdate()
@@ -30,11 +30,12 @@ public class BombsSpawner : BaseSpawner<Sphere>
             {
                 bomb.SetPosition(cube.transform.position);
 
-                spawnedObjectsCount++;
+                SpawnedObjectsCount++;
 
                 ChangedCreatedCounter?.Invoke(_pool.Count);
-                ChangedSpawnedCounter?.Invoke(spawnedObjectsCount);
+                ChangedSpawnedCounter?.Invoke(SpawnedObjectsCount);
 
+                bomb.Releasing -= _pool.Release;
                 bomb.Releasing += _pool.Release;
             }
         }

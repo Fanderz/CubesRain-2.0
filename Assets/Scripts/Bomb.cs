@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 
 [RequireComponent(typeof(MeshRenderer))]
-public class Sphere : MonoBehaviour
+public class Bomb : MonoBehaviour
 {
     [SerializeField] private float _explosionForce;
     [SerializeField] private float _explosionRadius;
@@ -14,7 +14,7 @@ public class Sphere : MonoBehaviour
     private Coroutine _coroutine;
     private MeshRenderer _renderer;
 
-    public event Action<Sphere> Releasing;
+    public event Action<Bomb> Releasing;
 
     private void Awake()
     {

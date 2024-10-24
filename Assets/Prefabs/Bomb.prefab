@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 889677775439778137}
   - component: {fileID: 1364207458646076235}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _explosionForce: 150
   _explosionRadius: 50
-  _smoothTransparencyValue: 0.05
+  _smoothTransparencyValue: 0.005
 --- !u!54 &1364207458646076235
 Rigidbody:
   m_ObjectHideFlags: 0

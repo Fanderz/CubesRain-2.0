@@ -25,7 +25,7 @@ public class CubesSpawner : BaseSpawner<Cube>
 
     private void Awake()
     {
-        _pool = new Pool<Cube>(poolMaxSize, prefab, transform);
+        _pool = new Pool<Cube>(PoolMaxSize, Prefab, transform);
         _wait = new WaitForSeconds(_spawnDelay);
         _abyss.Releasing += _pool.Release;
         _bombSpawner.ReleasingCube += _pool.Release;
@@ -43,6 +43,7 @@ public class CubesSpawner : BaseSpawner<Cube>
         isEnabled = false;
 
         _abyss.Releasing -= _pool.Release;
+        _bombSpawner.ReleasingCube -= _pool.Release;
 
         if (_coroutine != null)
             StopCoroutine(_coroutine);
@@ -72,10 +73,10 @@ public class CubesSpawner : BaseSpawner<Cube>
                 cube.Releasing -= _pool.Release;
                 cube.Releasing += _pool.Release;
 
-                spawnedObjectsCount++;
+                SpawnedObjectsCount++;
 
                 ChangedCreatedCounter?.Invoke(_pool.Count);
-                ChangedSpawnedCounter?.Invoke(spawnedObjectsCount);
+                ChangedSpawnedCounter?.Invoke(SpawnedObjectsCount);
             }
 
             yield return _wait;
