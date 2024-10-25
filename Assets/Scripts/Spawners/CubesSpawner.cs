@@ -1,6 +1,5 @@
-using System;
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 public class CubesSpawner : BaseSpawner<Cube>
 {
@@ -13,55 +12,37 @@ public class CubesSpawner : BaseSpawner<Cube>
     private float _yMinPosition = 8f;
     private float _yMaxPosition = 10f;
 
-    private bool isEnabled = false;
-
     private WaitForSeconds _wait;
     private Coroutine _coroutine;
-    private Pool<Cube> _pool;
 
-    public override event Action<int> ChangedSpawnedCounter;
-    public override event Action<int> ChangedCreatedCounter;
-    public override event Action<int> ChangedActiveCounter;
-
-    private void Awake()
+    protected override void Awake()
     {
-        _pool = new Pool<Cube>(PoolMaxSize, Prefab, transform);
+        base.Awake();
         _wait = new WaitForSeconds(_spawnDelay);
-        _abyss.Releasing += _pool.Release;
-        _bombSpawner.ReleasingCube += _pool.Release;
     }
 
     private void OnEnable()
     {
-        isEnabled = true;
-
+        _abyss.Releasing += Pool.Release;
         _coroutine = StartCoroutine(SpawnCoroutine());
     }
 
     private void OnDisable()
     {
-        isEnabled = false;
-
-        _abyss.Releasing -= _pool.Release;
-        _bombSpawner.ReleasingCube -= _pool.Release;
+        _abyss.Releasing -= Pool.Release;
 
         if (_coroutine != null)
             StopCoroutine(_coroutine);
     }
 
-    private void FixedUpdate()
-    {
-        ChangedActiveCounter?.Invoke(_pool.ActiveCount);
-    }
-
     private IEnumerator SpawnCoroutine()
     {
-        while (isEnabled)
+        while (enabled)
         {
-            Vector3 startPosition = new Vector3(UnityEngine.Random.Range(-_xStartPosition, _xStartPosition),
-                UnityEngine.Random.Range(_yMinPosition, _yMaxPosition), UnityEngine.Random.Range(-_zStartPosition, _zStartPosition));
+            Vector3 startPosition = new Vector3(Random.Range(-_xStartPosition, _xStartPosition),
+                Random.Range(_yMinPosition, _yMaxPosition), Random.Range(-_zStartPosition, _zStartPosition));
 
-            var cube = _pool.Get();
+            var cube = GetObject();
 
             if (cube != null)
             {
@@ -70,13 +51,8 @@ public class CubesSpawner : BaseSpawner<Cube>
                 cube.SpawningBomb -= _bombSpawner.SpawnBomb;
                 cube.SpawningBomb += _bombSpawner.SpawnBomb;
 
-                cube.Releasing -= _pool.Release;
-                cube.Releasing += _pool.Release;
-
-                SpawnedObjectsCount++;
-
-                ChangedCreatedCounter?.Invoke(_pool.Count);
-                ChangedSpawnedCounter?.Invoke(SpawnedObjectsCount);
+                cube.Releasing -= Pool.Release;
+                cube.Releasing += Pool.Release;
             }
 
             yield return _wait;

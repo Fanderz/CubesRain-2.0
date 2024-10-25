@@ -1,29 +1,46 @@
 using UnityEngine;
 using TMPro;
 
-public class BaseTextView<T> : MonoBehaviour
+public class BaseTextView<T> : MonoBehaviour where T : MonoBehaviour
 {
-    [SerializeField] protected TextMeshProUGUI View;
+    [SerializeField] protected TextMeshProUGUI SpawnedView;
+    [SerializeField] protected TextMeshProUGUI CreatedView;
+    [SerializeField] protected TextMeshProUGUI ActiveView;
     [SerializeField] protected BaseSpawner<T> Spawner;
 
-    protected void Awake()
+    protected void ChangeSpawnedView(int value)
     {
-        View.text = "0";
+        SpawnedView.text = value.ToString();
     }
 
-    protected void ChangeView(int value)
+    protected void ChangeCreatedView(int value)
     {
-        View.text = value.ToString();
+        CreatedView.text = value.ToString();
     }
 
-    protected virtual void Start()
+    protected void ChangeActiveView(int value)
     {
+        ActiveView.text = value.ToString();
     }
 
-    protected virtual void OnDisable()
+    protected void Start()
     {
-        Spawner.ChangedSpawnedCounter -= ChangeView;
-        Spawner.ChangedActiveCounter -= ChangeView;
-        Spawner.ChangedCreatedCounter -= ChangeView;
+        SpawnedView.text = "0";
+        CreatedView.text = "0";
+        ActiveView.text = "0";
+    }
+
+    protected void OnEnable()
+    {
+        Spawner.ChangedSpawnedCounter += ChangeSpawnedView;
+        Spawner.ChangedCreatedCounter += ChangeCreatedView;
+        Spawner.ChangedActiveCounter += ChangeActiveView;
+    }
+
+    protected void OnDisable()
+    {
+        Spawner.ChangedSpawnedCounter -= ChangeSpawnedView;
+        Spawner.ChangedCreatedCounter -= ChangeCreatedView;
+        Spawner.ChangedActiveCounter -= ChangeActiveView;
     }
 }
