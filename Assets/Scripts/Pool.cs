@@ -28,11 +28,6 @@ public class Pool<T> where T : MonoBehaviour
         if (_objects.FindAll(obj => obj.gameObject.activeSelf == false).Count > 0)
         {
             result = _objects.Find(obj => obj.gameObject.activeSelf == false);
-
-            //if (result != null)
-            //{
-            //    result.gameObject.SetActive(true);
-            //}
         }
         else
         {
