@@ -11,9 +11,9 @@ public class BaseSpawner<T> : MonoBehaviour where T : MonoBehaviour
 
     protected Pool<T> Pool;
 
-    public virtual event Action<int> ChangedSpawnedCounter;
-    public virtual event Action<int> ChangedCreatedCounter;
-    public virtual event Action<int> ChangedActiveCounter;
+    public event Action<int> ChangedSpawnedCounter;
+    public event Action<int> ChangedCreatedCounter;
+    public event Action<int> ChangedActiveCounter;
 
     protected virtual void Awake()
     {
@@ -39,5 +39,15 @@ public class BaseSpawner<T> : MonoBehaviour where T : MonoBehaviour
         }
 
         return obj;
+    }
+
+    protected virtual void Spawn(T obj)
+    {
+        obj.gameObject.SetActive(true);
+    }
+
+    protected virtual void Release(T obj)
+    {
+        Pool.Release(obj);
     }
 }

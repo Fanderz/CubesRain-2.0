@@ -2,6 +2,8 @@ public class BombsSpawner : BaseSpawner<Bomb>
 {
     public void SpawnBomb(Cube cube)
     {
+        cube.SpawningBomb -= SpawnBomb;
+
         if (cube != null)
         {
             var bomb = GetObject();
@@ -10,9 +12,22 @@ public class BombsSpawner : BaseSpawner<Bomb>
             {
                 bomb.SetPosition(cube.transform.position);
 
-                bomb.Releasing -= Pool.Release;
-                bomb.Releasing += Pool.Release;
+                Spawn(bomb);
             }
         }
+    }
+
+    protected override void Spawn(Bomb bomb)
+    {
+        bomb.Releasing += Release;
+
+        base.Spawn(bomb);
+    }
+
+    protected override void Release(Bomb bomb)
+    {
+        bomb.Releasing -= Release;
+
+        base.Release(bomb);
     }
 }

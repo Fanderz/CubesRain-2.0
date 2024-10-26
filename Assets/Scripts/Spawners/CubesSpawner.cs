@@ -35,25 +35,33 @@ public class CubesSpawner : BaseSpawner<Cube>
             StopCoroutine(_coroutine);
     }
 
+    protected override void Spawn(Cube cube)
+    {
+        Vector3 startPosition = new Vector3(Random.Range(-_xStartPosition, _xStartPosition),
+            Random.Range(_yMinPosition, _yMaxPosition), Random.Range(-_zStartPosition, _zStartPosition));
+
+        cube.transform.position = startPosition;
+        cube.Releasing += Release;
+        cube.SpawningBomb += _bombSpawner.SpawnBomb;
+
+        base.Spawn(cube);
+    }
+
+    protected override void Release(Cube cube)
+    {
+        cube.Releasing -= Release;
+
+        base.Release(cube);
+    }
+
     private IEnumerator SpawnCoroutine()
     {
         while (enabled)
         {
-            Vector3 startPosition = new Vector3(Random.Range(-_xStartPosition, _xStartPosition),
-                Random.Range(_yMinPosition, _yMaxPosition), Random.Range(-_zStartPosition, _zStartPosition));
-
             var cube = GetObject();
 
             if (cube != null)
-            {
-                cube.transform.position = startPosition;
-
-                cube.SpawningBomb -= _bombSpawner.SpawnBomb;
-                cube.SpawningBomb += _bombSpawner.SpawnBomb;
-
-                cube.Releasing -= Pool.Release;
-                cube.Releasing += Pool.Release;
-            }
+                Spawn(cube);
 
             yield return _wait;
         }

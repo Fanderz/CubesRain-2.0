@@ -8,6 +8,27 @@ public class BaseTextView<T> : MonoBehaviour where T : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI ActiveView;
     [SerializeField] protected BaseSpawner<T> Spawner;
 
+    protected void OnEnable()
+    {
+        Spawner.ChangedSpawnedCounter += ChangeSpawnedView;
+        Spawner.ChangedCreatedCounter += ChangeCreatedView;
+        Spawner.ChangedActiveCounter += ChangeActiveView;
+    }
+
+    protected void OnDisable()
+    {
+        Spawner.ChangedSpawnedCounter -= ChangeSpawnedView;
+        Spawner.ChangedCreatedCounter -= ChangeCreatedView;
+        Spawner.ChangedActiveCounter -= ChangeActiveView;
+    }
+
+    protected void Start()
+    {
+        SpawnedView.text = "0";
+        CreatedView.text = "0";
+        ActiveView.text = "0";
+    }
+
     protected void ChangeSpawnedView(int value)
     {
         SpawnedView.text = value.ToString();
@@ -21,26 +42,5 @@ public class BaseTextView<T> : MonoBehaviour where T : MonoBehaviour
     protected void ChangeActiveView(int value)
     {
         ActiveView.text = value.ToString();
-    }
-
-    protected void Start()
-    {
-        SpawnedView.text = "0";
-        CreatedView.text = "0";
-        ActiveView.text = "0";
-    }
-
-    protected void OnEnable()
-    {
-        Spawner.ChangedSpawnedCounter += ChangeSpawnedView;
-        Spawner.ChangedCreatedCounter += ChangeCreatedView;
-        Spawner.ChangedActiveCounter += ChangeActiveView;
-    }
-
-    protected void OnDisable()
-    {
-        Spawner.ChangedSpawnedCounter -= ChangeSpawnedView;
-        Spawner.ChangedCreatedCounter -= ChangeCreatedView;
-        Spawner.ChangedActiveCounter -= ChangeActiveView;
     }
 }

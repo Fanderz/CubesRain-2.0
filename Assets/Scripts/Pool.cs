@@ -29,10 +29,10 @@ public class Pool<T> where T : MonoBehaviour
         {
             result = _objects.Find(obj => obj.gameObject.activeSelf == false);
 
-            if (result != null)
-            {
-                result.gameObject.SetActive(true);
-            }
+            //if (result != null)
+            //{
+            //    result.gameObject.SetActive(true);
+            //}
         }
         else
         {
